@@ -20,11 +20,11 @@ public class RegisterGUI extends JFrame {
     }
 
     private void initializeUI() {
-        // 加载背景图片
+        // Load background image
         try {
-            URL imageUrl = getClass().getResource("bg3.jpg"); // 确保图片路径正确
+            URL imageUrl = getClass().getResource("bg3.jpg"); // Make sure the image path is correct
             if (imageUrl == null) {
-                System.err.println("图片文件未找到:bg3.jpg");
+                System.err.println("Image file not found: bg3.jpg");
             } else {
                 backgroundImage = ImageIO.read(imageUrl);
             }
@@ -32,22 +32,22 @@ public class RegisterGUI extends JFrame {
             e.printStackTrace();
         }
 
-        // 设置窗口属性
-        setTitle("个人财务记账系统 - 注册");
+        // Set window properties
+        setTitle("Personal Finance System - Register");
         setSize(450, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setUndecorated(true); // 去除默认边框
-        setShape(new RoundRectangle2D.Double(0, 0, 450, 400, 20, 20)); // 圆角窗口
+        setUndecorated(true); // Remove default border
+        setShape(new RoundRectangle2D.Double(0, 0, 450, 400, 20, 20)); // Rounded corners
 
-        // 主面板设置 - 使用自定义面板绘制背景
+        // Main panel setup - custom panel for background drawing
         JPanel mainPanel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // 绘制背景图片（如果没有图片则使用当前背景色）
+                // Draw background image (use background color if no image)
                 if (backgroundImage != null) {
-                    // 保持图片比例并居中显示
+                    // Maintain image aspect ratio and center it
                     int imgWidth = backgroundImage.getWidth();
                     int imgHeight = backgroundImage.getHeight();
                     float imgRatio = (float) imgWidth / imgHeight;
@@ -67,48 +67,48 @@ public class RegisterGUI extends JFrame {
 
                     g.drawImage(backgroundImage, x, y, drawWidth, drawHeight, this);
 
-                    // 添加半透明遮罩层，确保文字清晰可见
+                    // Add semi-transparent overlay to ensure text visibility
                     g.setColor(new Color(240, 242, 245, 200));
                     g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
-        mainPanel.setBackground(new Color(245, 248, 250)); // 如果没有背景图片，使用默认背景色
+        mainPanel.setBackground(new Color(245, 248, 250)); // Default background if no image
         mainPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
 
-        // 标题面板
+        // Title panel
         JPanel titlePanel = new JPanel();
         titlePanel.setOpaque(false);
-        JLabel titleLabel = new JLabel("创建新账户");
-        titleLabel.setFont(new Font("微软雅黑", Font.BOLD, 22));
+        JLabel titleLabel = new JLabel("Create New Account");
+        titleLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 22));
         titleLabel.setForeground(new Color(0, 120, 215));
         titlePanel.add(titleLabel);
         mainPanel.add(titlePanel, BorderLayout.NORTH);
 
-        // 注册表单面板
+        // Registration form panel
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setOpaque(false);
         formPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
-        // 用户名输入
-        formPanel.add(createInputField("用户名", "请输入用户名", false));
+        // Username input
+        formPanel.add(createInputField("Username", "Enter username", false));
         formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // 密码输入
-        formPanel.add(createInputField("密码", "请输入密码", true));
+        // Password input
+        formPanel.add(createInputField("Password", "Enter password", true));
         formPanel.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // 按钮面板
+        // Button panel
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         buttonPanel.setOpaque(false);
 
-        // 注册按钮
-        JButton registerButton = createGradientButton("注册", new Color(0, 120, 215), new Color(0, 150, 255));
+        // Register button
+        JButton registerButton = createGradientButton("Register", new Color(0, 120, 215), new Color(0, 150, 255));
         registerButton.addActionListener(this::registerAction);
 
-        // 返回按钮
-        JButton backButton = createGradientButton("返回", new Color(150, 150, 150), new Color(180, 180, 180));
+        // Back button
+        JButton backButton = createGradientButton("Back", new Color(150, 150, 150), new Color(180, 180, 180));
         backButton.addActionListener(e -> {
             dispose();
             new LoginGUI().setVisible(true);
@@ -120,7 +120,7 @@ public class RegisterGUI extends JFrame {
 
         mainPanel.add(formPanel, BorderLayout.CENTER);
 
-        // 关闭按钮
+        // Close button
         JButton closeButton = new JButton("×");
         styleCloseButton(closeButton);
 
@@ -136,13 +136,13 @@ public class RegisterGUI extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setOpaque(false);
 
-        // 标签
+        // Label
         JLabel label = new JLabel(labelText);
-        label.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+        label.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
         label.setForeground(new Color(80, 80, 80));
         panel.add(label, BorderLayout.NORTH);
 
-        // 输入面板
+        // Input panel
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.X_AXIS));
         inputPanel.setBackground(Color.WHITE);
@@ -152,13 +152,13 @@ public class RegisterGUI extends JFrame {
 
         if (isPassword) {
             newPasswordField = new JPasswordField();
-            newPasswordField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+            newPasswordField.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
             newPasswordField.setBorder(BorderFactory.createEmptyBorder());
             newPasswordField.setOpaque(false);
             inputPanel.add(newPasswordField);
         } else {
             newUsernameField = new JTextField();
-            newUsernameField.setFont(new Font("微软雅黑", Font.PLAIN, 14));
+            newUsernameField.setFont(new Font("Microsoft YaHei", Font.PLAIN, 14));
             newUsernameField.setBorder(BorderFactory.createEmptyBorder());
             newUsernameField.setOpaque(false);
             inputPanel.add(newUsernameField);
@@ -175,14 +175,14 @@ public class RegisterGUI extends JFrame {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // 渐变背景
+                // Gradient background
                 GradientPaint gradient = new GradientPaint(
                         0, 0, startColor,
                         0, getHeight(), endColor);
                 g2.setPaint(gradient);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
 
-                // 文字
+                // Text
                 g2.setColor(Color.WHITE);
                 FontMetrics fm = g2.getFontMetrics();
                 int x = (getWidth() - fm.stringWidth(getText())) / 2;
@@ -193,13 +193,13 @@ public class RegisterGUI extends JFrame {
             }
         };
 
-        button.setFont(new Font("微软雅黑", Font.BOLD, 14));
+        button.setFont(new Font("Microsoft YaHei", Font.BOLD, 14));
         button.setForeground(Color.WHITE);
         button.setContentAreaFilled(false);
         button.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // 悬停效果
+        // Hover effect
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.repaint();
@@ -237,7 +237,7 @@ public class RegisterGUI extends JFrame {
         String password = new String(newPasswordField.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            showErrorDialog("用户名和密码不能为空！", "注册失败");
+            showErrorDialog("Username and password cannot be empty!", "Registration Failed");
             return;
         }
         String userId = Utilities.generateUniqueId();
@@ -247,14 +247,14 @@ public class RegisterGUI extends JFrame {
             try {
                 new File(Constants.getTransactionsFilePath(userId)).createNewFile();
                 new File(Constants.getCategoriesFilePath(userId)).createNewFile();
-                showSuccessDialog("注册成功！", "提示");
+                showSuccessDialog("Registration successful!", "Success");
                 dispose();
                 new LoginGUI().setVisible(true);
             } catch (IOException ex) {
-                showErrorDialog("创建用户文件失败！", "错误");
+                showErrorDialog("Failed to create user files!", "Error");
             }
         } else {
-            showErrorDialog("用户名已存在！", "注册失败");
+            showErrorDialog("Username already exists!", "Registration Failed");
         }
     }
 
