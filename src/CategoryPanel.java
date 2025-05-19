@@ -33,46 +33,55 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         categoryManager.getCategories().forEach(listModel::addElement);
 
         categoryList = new JList<>(listModel);
-        categoryList.setFont(new Font("Arial", Font.BOLD, 14)); // Changed font
+        //
+        Font largeFont = new Font("Arial", Font.BOLD, 18);
+        categoryList.setFont(largeFont);
         categoryList.setForeground(Color.BLACK);
         categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         categoryList.setBackground(Color.WHITE);
+        //    ?
         categoryList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
-                    boolean isSelected, boolean cellHasFocus) {
+                                                          boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-                setForeground(isSelected ? Color.WHITE : Color.BLACK);
+                setForeground(isSelected? Color.WHITE : Color.BLACK);
                 setFont(getFont().deriveFont(Font.BOLD));
-                setBackground(isSelected ? new Color(70, 130, 180) : Color.WHITE);
+                setBackground(isSelected? new Color(70, 130, 180) : Color.WHITE);
+                //        ? ?   д ?  ??
+                setHorizontalAlignment(JLabel.CENTER);
+                setVerticalAlignment(JLabel.CENTER);
                 return this;
             }
         });
 
         JScrollPane scrollPane = new JScrollPane(categoryList);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Existing Categories")); // Modified
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Existing Categories"));
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.getViewport().setBackground(Color.WHITE);
 
         // Action buttons panel
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 20, 20)); //     ? ??
         buttonPanel.setOpaque(false);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); //      ? ?
 
-        JButton addButton = new JButton("Add Category"); // Modified
-        JButton deleteButton = new JButton("Delete Selected"); // Modified
-        JButton updateButton = new JButton("Edit Category"); // Modified
+        JButton addButton = new JButton("Add Category");
+        JButton deleteButton = new JButton("Delete Selected");
+        JButton updateButton = new JButton("Edit Category");
 
         // Button styling
         for (JButton button : new JButton[] { addButton, deleteButton, updateButton }) {
-            button.setFont(new Font("Arial", Font.BOLD, 14)); // Changed font
+            button.setFont(largeFont);
             button.setForeground(Color.BLACK);
             button.setBackground(new Color(255, 255, 255, 200));
             button.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(70, 130, 180)),
-                    BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+                    BorderFactory.createEmptyBorder(10, 20, 10, 20))); //     ? ??
+            //  ? ?   ?
+            button.setHorizontalAlignment(JButton.CENTER);
+            button.setVerticalAlignment(JButton.CENTER);
         }
 
         buttonPanel.add(addButton);
@@ -85,7 +94,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         updateButton.addActionListener(e -> updateCategory());
 
         // Layout configuration
-        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
+        JPanel centerPanel = new JPanel(new BorderLayout(20, 20)); //
         centerPanel.setOpaque(false);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(buttonPanel, BorderLayout.EAST);
@@ -94,7 +103,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
     }
 
     private void addCategory() {
-        String newCategory = JOptionPane.showInputDialog(this, "Enter new category name:"); // Modified
+        String newCategory = JOptionPane.showInputDialog(this, "Enter new category name:");
         if (newCategory != null && !newCategory.trim().isEmpty()) {
             if (categoryManager.getCategories().contains(newCategory.trim())) {
                 JOptionPane.showMessageDialog(this, "Category already exists!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -103,7 +112,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
             categoryManager.addCategory(newCategory.trim());
             categoryManager.saveCategoriesToFile(Constants.getCategoriesFilePath(currentUser.getId()));
             ((MainGUI) SwingUtilities.getWindowAncestor(this)).refreshAllData();
-            JOptionPane.showMessageDialog(this, "Category added successfully!"); // Modified
+            JOptionPane.showMessageDialog(this, "Category added successfully!");
         }
     }
 
@@ -111,14 +120,14 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         String selectedCategory = categoryList.getSelectedValue();
         if (selectedCategory != null) {
             int confirm = JOptionPane.showConfirmDialog(this,
-                    "Confirm delete category: '" + selectedCategory + "'?\nAll related transactions will be removed!", // Modified
-                    "Confirm Deletion", JOptionPane.YES_NO_OPTION); // Modified
+                    "Confirm delete category: '" + selectedCategory + "'?\nAll related transactions will be removed!",
+                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 categoryManager.deleteCategory(selectedCategory);
                 transactionManager.deleteTransactionsByCategory(selectedCategory);
                 categoryManager.saveCategoriesToFile(Constants.getCategoriesFilePath(currentUser.getId()));
                 ((MainGUI) SwingUtilities.getWindowAncestor(this)).refreshAllData();
-                JOptionPane.showMessageDialog(this, "Category deleted successfully!"); // Modified
+                JOptionPane.showMessageDialog(this, "Category deleted successfully!");
             }
         }
     }
@@ -126,7 +135,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
     private void updateCategory() {
         String oldCategory = categoryList.getSelectedValue();
         if (oldCategory != null) {
-            String newCategory = JOptionPane.showInputDialog(this, "Enter new category name:", oldCategory); // Modified
+            String newCategory = JOptionPane.showInputDialog(this, "Enter new category name:", oldCategory);
             if (newCategory != null && !newCategory.trim().isEmpty() && !newCategory.equals(oldCategory)) {
                 if (categoryManager.getCategories().contains(newCategory.trim())) {
                     JOptionPane.showMessageDialog(this, "Category already exists!", "Warning",
@@ -137,7 +146,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
                 transactionManager.updateTransactionsCategory(oldCategory, newCategory.trim());
                 categoryManager.saveCategoriesToFile(Constants.getCategoriesFilePath(currentUser.getId()));
                 ((MainGUI) SwingUtilities.getWindowAncestor(this)).refreshAllData();
-                JOptionPane.showMessageDialog(this, "Category updated successfully!"); // Modified
+                JOptionPane.showMessageDialog(this, "Category updated successfully!");
             }
         }
     }
