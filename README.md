@@ -13,19 +13,18 @@ A Java-based personal finance management tool designed to help users efficiently
 ### 📦 Setup Steps
 
 1. **Clone the Repository**
-   ```bash
+
    git clone https://github.com/Group-27-G2/KeepAccounts.git
-````
 
 2. **Project Structure**
 
-   ```
+
    - main/
      ├── src/            # Source files
      │   └── src/        # Java classes
      ├── image/          # Background & UI images (e.g., bg1.jpg, bg3.jpg)
      └── test/           # Test classes
-   ```
+
 
 3. **Run the Program**
 
