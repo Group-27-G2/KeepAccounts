@@ -1,5 +1,3 @@
-package src;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -30,27 +28,28 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
     }
 
     private void initializeComponents() {
-        // Initialize category list model with existing categories
+        // Initialize category list
         listModel = new DefaultListModel<>();
         categoryManager.getCategories().forEach(listModel::addElement);
 
         categoryList = new JList<>(listModel);
+        //
         Font largeFont = new Font("Arial", Font.BOLD, 18);
         categoryList.setFont(largeFont);
         categoryList.setForeground(Color.BLACK);
         categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         categoryList.setBackground(Color.WHITE);
-
-        // Custom renderer for category list items
+        //    ?
         categoryList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index,
                                                           boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-                setForeground(isSelected ? Color.WHITE : Color.BLACK);
+                setForeground(isSelected? Color.WHITE : Color.BLACK);
                 setFont(getFont().deriveFont(Font.BOLD));
-                setBackground(isSelected ? new Color(70, 130, 180) : Color.WHITE);
+                setBackground(isSelected? new Color(70, 130, 180) : Color.WHITE);
+
                 setHorizontalAlignment(JLabel.CENTER);
                 setVerticalAlignment(JLabel.CENTER);
                 return this;
@@ -63,7 +62,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         scrollPane.getViewport().setOpaque(false);
         scrollPane.getViewport().setBackground(Color.WHITE);
 
-        // Panel for action buttons
+        // Action buttons panel
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 20, 20));
         buttonPanel.setOpaque(false);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
@@ -72,7 +71,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         JButton deleteButton = new JButton("Delete Selected");
         JButton updateButton = new JButton("Edit Category");
 
-        // Style all buttons consistently
+        // Button styling
         for (JButton button : new JButton[] { addButton, deleteButton, updateButton }) {
             button.setFont(largeFont);
             button.setForeground(Color.BLACK);
@@ -80,6 +79,7 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
             button.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(70, 130, 180)),
                     BorderFactory.createEmptyBorder(10, 20, 10, 20)));
+
             button.setHorizontalAlignment(JButton.CENTER);
             button.setVerticalAlignment(JButton.CENTER);
         }
@@ -88,13 +88,13 @@ public class CategoryPanel extends JPanel implements MainGUI.RefreshablePanel {
         buttonPanel.add(deleteButton);
         buttonPanel.add(updateButton);
 
-        // Set up event handlers
+        // Event handlers
         addButton.addActionListener(e -> addCategory());
         deleteButton.addActionListener(e -> deleteCategory());
         updateButton.addActionListener(e -> updateCategory());
 
-        // Main content layout
-        JPanel centerPanel = new JPanel(new BorderLayout(20, 20));
+        // Layout configuration
+        JPanel centerPanel = new JPanel(new BorderLayout(20, 20)); //
         centerPanel.setOpaque(false);
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(buttonPanel, BorderLayout.EAST);
