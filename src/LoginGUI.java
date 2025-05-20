@@ -220,6 +220,7 @@ public class LoginGUI extends JFrame {
         return button;
     }
 
+    // updated by tangziyao
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             try {
