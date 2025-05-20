@@ -16,21 +16,57 @@ A Java-based personal finance management tool designed to help users efficiently
 
    git clone https://github.com/Group-27-G2/KeepAccounts.git
 
-2. **Project Structure**
+2. **📂Project Structure**
+
+```
+main/
+├── src/
+│   └── src/
+│       ├── User.java
+│       ├── TransactionManager.java
+│       ├── StatisticsGUI.java
+│       └── ...
+├── image/
+├── test/
+│   ├── UserManagerTest.java
+│   └── TransactionTest.java
+```
+
+3.**🚀Run the Program**
+
+## 🧰 Supported Development Environments (Compilers/IDEs)
+
+You can open and run this project using any of the following Java development tools:
+
+* IntelliJ IDEA
+* Eclipse
+* NetBeans
+* Visual Studio Code (with Java extensions)
+* Terminal / Command Prompt
+
+---
+
+## 💻 Running via Terminal (Command Line)
+
+1. **Navigate to the project directory**:
+
+   ```bash
+   cd path/to/your/project
+   ```
+
+2. **Compile all source files**:
+
+   ```bash
+   javac -d out src/*.java
+   ```
+
+3. **Run the main GUI class**:
+
+   ```bash
+   java -cp out src.LoginGUI
+   ```
 
 
-   - main/
-     ├── src/            # Source files
-     │   └── src/        # Java classes
-     ├── image/          # Background & UI images (e.g., bg1.jpg, bg3.jpg)
-     └── test/           # Test classes
-
-
-3. **Run the Program**
-
-   * Open the project in your IDE.
-   * Run `LoginGUI.java` to launch the application.
-     
 ## 🆕 Version History
 
 | Version | Features                                                                    |
@@ -86,23 +122,6 @@ A Java-based personal finance management tool designed to help users efficiently
 
 ---
 
-## 📂 Project Directory Structure
-
-```
-main/
-├── src/
-│   └── src/
-│       ├── User.java
-│       ├── TransactionManager.java
-│       ├── StatisticsGUI.java
-│       └── ...
-├── image/
-├── test/
-│   ├── UserManagerTest.java
-│   └── TransactionTest.java
-```
-
----
 
 
 
