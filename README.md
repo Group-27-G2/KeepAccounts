@@ -1,4 +1,4 @@
-# 💰 Personal Finance Management System
+# 💰 KeepAccounts
 
 A Java-based personal finance management tool designed to help users efficiently track income, expenses, and manage their financial data. This system includes user registration/login, transaction records, data visualization, account balance handling, and intelligent advice features.
 
@@ -35,31 +35,15 @@ A Java-based personal finance management tool designed to help users efficiently
 
 ## 👥 Team Member Task Allocation
 
-| Module                                | Contributor | Student ID |
-| ------------------------------------- | ----------- | ---------- |
-| **1. User Management**                | Yuhan Feng  | 221166426  |
-|     - `User.java` – User entity class |             |            |
+| Module No. | Module Name                          | Member Name   | Student ID | Responsibilities                                                                                                                                                                                                                  |
+| ---------- | ------------------------------------ | ------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1          | **User Management Module**           | Yuhan Feng    | 221166426  | - `User.java`: Defines the user entity with attributes and methods.<br>- `UserManager.java`: Handles user operations such as adding, deleting, and updating.<br>- `UserPanel.java`: GUI for user information display and updates. |
+| 2          | **Classification Management Module** | Xinzhu Yu     | 221166390  | - `CategoryManager.java`: Manages category creation, modification, and deletion.<br>- `CategoryPanel.java`: GUI for category management.                                                                                          |
+| 3          | **Transaction Management Module**    | Yuetong Fang  | 221166404  | - `Transaction.java`: Represents individual financial transactions.<br>- `TransactionManager.java`: Handles transaction operations and logic.<br>- `TransactionPanel.java`: GUI for entering and viewing transactions.            |
+| 4          | **Statistical Module**               | Chenchen Guan | 221166448  | - `StatisticsGUI.java`: Interface for displaying statistical information.<br>- `StatisticsPanel.java`: Presents bar and pie charts for income/expense data.                                                                       |
+| 5          | **Main Interface & Utility Classes** | Danyao Yang   | 221166460  | - `MainGUI.java`: Main entry point and dashboard for the application.<br>- `Utilities.java`: General helper functions.<br>- `Constants.java`: Stores global constants for consistency.                                            |
+| 6          | **Authentication & Resource Module** | Ziyao Tang    | 221166389  | - `LoginGUI.java`: User login interface.<br>- `RegisterGUI.java`: New user registration interface.<br>- `AdvicePanel.java`: Displays AI-based financial advice.<br>- `bg1.jpg`, `bg3.jpg`: Background images for GUI styling.     |
 
-* `UserManager.java` – Handles user info storage
-* `UserPanel.java` – User settings UI |
-  \| **2. Classification Management** | Xinzhu Yu | 221166390 |
-  \|     - `CategoryManager.java` – Add/Edit/Delete categories
-* `CategoryPanel.java` – Category GUI interface |
-  \| **3. Transaction Management** | Yuetong Fang | 221166404 |
-  \|     - `Transaction.java`, `TransactionManager.java`
-* `TransactionPanel.java` – Manage income/expense entries |
-  \| **4. Statistics Module** | Chenchen Guan | 221166448 |
-  \|     - `StatisticsGUI.java` – Visualization UI
-* `StatisticsPanel.java` – Chart layout & data display |
-  \| **5. Main Interface & Utilities** | Danyao Yang | 221166460 |
-  \|     - `MainGUI.java` – App entry point
-* `Utilities.java`, `Constants.java` – Support functions |
-  \| **6. Authentication & Resources** | Ziyao Tang | 221166389 |
-  \|     - `LoginGUI.java`, `RegisterGUI.java`
-* `AdvicePanel.java` – AI suggestions
-* `bg1.jpg`, `bg3.jpg` – UI background resources |
-
----
 
 ## 🚀 Feature Overview
 
