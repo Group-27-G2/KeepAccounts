@@ -30,7 +30,14 @@ A Java-based personal finance management tool designed to help users efficiently
 
    * Open the project in your IDE.
    * Run `LoginGUI.java` to launch the application.
+     
+## 🆕 Version History
 
+| Version | Changes                                                                     |
+| ------- | --------------------------------------------------------------------------- |
+| v1.0    | Basic system implementation: user login/registration, add transactions      |
+| v2.0    | ✨ Added AI financial suggestions via `AdvicePanel`                          |
+| v3.0    | 📊 Introduced data visualization (bar & pie charts) for income and expenses |
 ---
 
 ## 👥 Team Member Task Allocation
@@ -73,9 +80,6 @@ A Java-based personal finance management tool designed to help users efficiently
 * Change password
 * Personalized user settings
 
-### 📤 Data Export
-
-* Export financial records as `.CSV` or `.XLSX`
 
 ---
 
@@ -90,22 +94,10 @@ main/
 │       ├── StatisticsGUI.java
 │       └── ...
 ├── image/
-│   ├── bg1.jpg
-│   └── bg3.jpg
 ├── test/
 │   ├── UserManagerTest.java
 │   └── TransactionTest.java
 ```
-
----
-
-## 🆕 Version History
-
-| Version | Changes                                                                     |
-| ------- | --------------------------------------------------------------------------- |
-| v1.0    | Basic system implementation: user login/registration, add transactions      |
-| v2.0    | ✨ Added AI financial suggestions via `AdvicePanel`                          |
-| v3.0    | 📊 Introduced data visualization (bar & pie charts) for income and expenses |
 
 ---
 
