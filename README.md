@@ -33,11 +33,14 @@ A Java-based personal finance management tool designed to help users efficiently
      
 ## 🆕 Version History
 
-| Version | Changes                                                                     |
+| Version | Features                                                                    |
 | ------- | --------------------------------------------------------------------------- |
-| v1.0    | Basic system implementation: user login/registration, add transactions      |
-| v2.0    | ✨ Added AI financial suggestions via `AdvicePanel`                          |
-| v3.0    | 📊 Introduced data visualization (bar & pie charts) for income and expenses |
+| v1.0    | Initial version: basic user login/registration and income/expense tracking. |
+| v2.0    | Added AI financial advice panel (`AdvicePanel.java`) using external API.    |
+| v2.1    | Added several test files for core modules to improve reliability.           |
+| v3.0    | Integrated visual statistical charts (bar and pie) for income and expenses. |
+| v3.1    | Fixed a bug related to AI advice API call and improved error handling.      |
+
 ---
 
 ## 👥 Team Member Task Allocation
