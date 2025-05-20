@@ -34,7 +34,7 @@ main/
 
 3.**🚀Run the Program**
 
-## 🧰 Supported Development Environments (Compilers/IDEs)
+🧰 Supported Development Environments (Compilers/IDEs)
 
 You can open and run this project using any of the following Java development tools:
 
@@ -46,7 +46,7 @@ You can open and run this project using any of the following Java development to
 
 ---
 
-## 💻 Running via Terminal (Command Line)
+💻 Running via Terminal (Command Line)
 
 1. **Navigate to the project directory**:
 
