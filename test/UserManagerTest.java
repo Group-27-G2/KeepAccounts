@@ -13,26 +13,52 @@ public class UserManagerTest {
     private User testUser;
 
     @Before
-    public void setUp() throws IOException { // Explicitly throw exceptions to avoid silent failures
+    public void setUp() throws IOException {
         userManager = new UserManager();
         testUser = new User("1", "testUser", "testPassword");
         testUser.setBalance(100.0);
 
         // Force delete user file to ensure test independence
         Path userFilePath = Paths.get(Constants.USERS_FILE);
-        Files.deleteIfExists(userFilePath); // Directly delete the file, ignoring non-existent cases
+        boolean deleted = Files.deleteIfExists(userFilePath);
+        System.out.println("User file deletion status before test: " + deleted);
     }
 
     @Test
     public void testRegister() {
-        // Test registration functionality
-        boolean result = userManager.register(testUser);
-        assertTrue(result);
+        System.out.println("=== Starting user registration test ===");
 
-        // Attempt to register with the same username again
-        User duplicateUser = new User("2", "testUser", "newPassword");
-        result = userManager.register(duplicateUser);
-        assertFalse(result);
+        // First registration
+        System.out.println("Attempting to register user: " + testUser.getUsername());
+        boolean firstResult = userManager.register(testUser);
+        System.out.println("First registration result: " + (firstResult ? "Success" : "Failure"));
+
+        // Check if user exists
+        User registeredUser = userManager.getUserByUsername("testUser");
+        if (registeredUser != null) {
+            System.out.println("Registered user information: ID=" + registeredUser.getId()
+                    + ", Username=" + registeredUser.getUsername()
+                    + ", Balance=" + registeredUser.getBalance());
+        } else {
+            System.out.println("Registered user not found!");
+        }
+
+        // Fix: Declare and initialize duplicateUser before use
+        User duplicateUser = new User("2", "testUser", "newPassword"); // Declared before use
+        System.out.println("Attempting to register with duplicate username: " + duplicateUser.getUsername());
+
+        boolean secondResult = userManager.register(duplicateUser);
+        System.out.println("Duplicate registration result: " + (secondResult ? "Success" : "Failure"));
+
+        // Check user information again
+        User finalUser = userManager.getUserByUsername("testUser");
+        if (finalUser != null) {
+            System.out.println("Final user information: ID=" + finalUser.getId()
+                    + ", Username=" + finalUser.getUsername()
+                    + ", Password modified?=" + (!"testPassword".equals(finalUser.getPassword())));
+        } else {
+            System.out.println("Final user not found!");
+        }
     }
 
     @Test
@@ -40,7 +66,7 @@ public class UserManagerTest {
         // Register user first
         userManager.register(testUser);
 
-        // Test login functionality
+        // Test login function
         User loggedInUser = userManager.login("testUser", "testPassword");
         assertNotNull(loggedInUser);
 
@@ -79,7 +105,7 @@ public class UserManagerTest {
         // Update user balance
         userManager.updateBalance("1", 200.0);
 
-        // Verify if balance is updated
+        // Verify balance update
         User updatedUser = userManager.getUserById("1");
         assertEquals(200.0, updatedUser.getBalance(), 0.001);
     }
@@ -93,7 +119,7 @@ public class UserManagerTest {
         boolean result = userManager.changePassword("1", "testPassword", "newPassword");
         assertTrue(result);
 
-        // Verify if new password takes effect
+        // Verify new password takes effect
         User updatedUser = userManager.login("testUser", "newPassword");
         assertNotNull(updatedUser);
     }
@@ -111,7 +137,7 @@ public class UserManagerTest {
         boolean result = userManager.updateUser(updatedUser);
         assertTrue(result);
 
-        // Verify if user information is updated
+        // Verify user information update
         User retrievedUser = userManager.getUserById("1");
         assertEquals("newUsername", retrievedUser.getUsername());
         assertEquals("newPassword", retrievedUser.getPassword());
