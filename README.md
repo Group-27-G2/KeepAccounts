@@ -76,7 +76,8 @@ You can open and run this project using any of the following Java development to
 | v2.1    | Added several test files for core modules to improve reliability.           |
 | v3.0    | Integrated visual statistical charts (bar and pie) for income and expenses. |
 | v3.1    | Fixed a bug related to AI advice API call and improved error handling.      |
-
+| v4.0    | Redesigned form organization for improved readability.                      |
+| v4.1    | Replaced manual text entry for expense/income selection with dropdown menus |
 ---
 
 ## 👥 Team Member Task Allocation
