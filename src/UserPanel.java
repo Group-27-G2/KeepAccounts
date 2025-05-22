@@ -42,7 +42,7 @@ public class UserPanel extends JPanel implements MainGUI.RefreshablePanel {
         add(titleLabel, gbc);
 
         // Current user info
-        JLabel userInfoLabel = new JLabel("Current User: " + currentUser.getId());
+        JLabel userInfoLabel = new JLabel("Current User: " + currentUser.getUsername());
         userInfoLabel.setFont(new Font("新罗马", Font.BOLD, 14));
         userInfoLabel.setForeground(Color.BLACK);
         gbc.gridx = 0;
