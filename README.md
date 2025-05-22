@@ -74,9 +74,11 @@ You can open and run this project using any of the following Java development to
 | v1.0    | Initial version: basic user login/registration and income/expense tracking. |
 | v2.0    | Added AI financial advice panel (`AdvicePanel.java`) using external API.    |
 | v2.1    | Added several test files for core modules to improve reliability.           |
-| v3.0    | Integrated visual statistical charts (bar and pie) for income and expenses. |
+| v3.0    | Integrated visual statistical charts (bar and pie) for expenses.            |
 | v3.1    | Fixed a bug related to AI advice API call and improved error handling.      |
-
+| v4.0    | Modified and beautified the appearance of multiple pages                    |
+| v4.1    | Replaced manual text entry for expense/income selection with dropdown menus |
+| v4.2    | Fixed the bug where the username displayed incorrectly                      |
 ---
 
 ## 👥 Team Member Task Allocation
