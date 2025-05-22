@@ -90,7 +90,8 @@ You can open and run this project using any of the following Java development to
 | 3          | **Transaction Management Module**    | Yuetong Fang  | 221166404  | - `Transaction.java`: Represents individual financial transactions.<br>- `TransactionManager.java`: Handles transaction operations and logic.<br>- `TransactionPanel.java`: GUI for entering and viewing transactions.            |
 | 4          | **Statistical Module**               | Chenchen Guan | 221166448  | - `StatisticsGUI.java`: Interface for displaying statistical information.<br>- `StatisticsPanel.java`: Presents bar and pie charts for income/expense data.                                                                       |
 | 5          | **Main Interface & Utility Classes** | Danyao Yang   | 221166460  | - `MainGUI.java`: Main entry point and dashboard for the application.<br>- `Utilities.java`: General helper functions.<br>- `Constants.java`: Stores global constants for consistency.                                            |
-| 6          | **Authentication & Resource Module** | Ziyao Tang    | 221166389  | - `LoginGUI.java`: User login interface.<br>- `RegisterGUI.java`: New user registration interface.<br>- `AdvicePanel.java`: Displays AI-based financial advice.<br>- `bg1.jpg`, `bg3.jpg`: Background images for GUI styling.     |
+| 6          | **Authentication & Resource Module** | Ziyao Tang    | 221166389  | - `LoginGUI.java`: User login interface.<br>- `RegisterGUI.java`: New user registration interface.<br>- `AdvicePanel.java`: Displays AI-based financial advice.                                                                   |                                
+    |
 
 
 ## 🚀 Feature Overview
