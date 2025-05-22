@@ -1,18 +1,30 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel {
     private final User currentUser;
     private final TransactionManager transactionManager;
     private final UserManager userManager;
     private JTextArea statsArea;
+    private JTextArea incomeStatsArea;
+    private JTextArea expenseStatsArea;
     private JComboBox<Integer> startYearCombo, endYearCombo;
     private JComboBox<Integer> startMonthCombo, endMonthCombo;
     private JComboBox<Integer> startDayCombo, endDayCombo;
+    private ChartPanel pieChartPanel;
+    private ChartPanel barChartPanel;
 
     public StatisticsPanel(User user, TransactionManager transactionManager, UserManager userManager) {
         this.currentUser = user;
@@ -21,6 +33,7 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
 
         setOpaque(false);
         setLayout(new BorderLayout());
+        setBackground(new Color(255, 255, 255, 150)); // 设置整个面板半透明
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         initializeComponents();
         refreshData();
@@ -35,43 +48,116 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
         // Create date range selection panel
         JPanel dateRangePanel = createDateRangePanel();
 
-        // Create statistics display area
-        statsArea = new JTextArea();
-        statsArea.setFont(new Font("微软雅黑", Font.BOLD, 14));
-        statsArea.setForeground(Color.BLACK);
-        statsArea.setEditable(false);
-        statsArea.setBackground(Color.WHITE);
-        statsArea.setLineWrap(true);
-        statsArea.setWrapStyleWord(true);
+        // Create statistics display areas
+        statsArea = createTextArea();
+        incomeStatsArea = createTextArea();
+        expenseStatsArea = createTextArea();
 
         JScrollPane scrollPane = new JScrollPane(statsArea);
+        JScrollPane incomeScrollPane = new JScrollPane(incomeStatsArea);
+        JScrollPane expenseScrollPane = new JScrollPane(expenseStatsArea);
+
+        // Make scroll panes semi-transparent
         scrollPane.setOpaque(false);
-        scrollPane.getViewport().setBackground(Color.WHITE);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Statistics"));
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("General Statistics"));
+        scrollPane.getViewport().setBackground(new Color(255, 255, 255, 150)); // 设置滚动视图半透明
+
+        incomeScrollPane.setOpaque(false);
+        incomeScrollPane.getViewport().setOpaque(false);
+        incomeScrollPane.setBorder(BorderFactory.createTitledBorder("Income Statistics"));
+        incomeScrollPane.getViewport().setBackground(new Color(255, 255, 255, 150)); // 设置滚动视图半透明
+
+        expenseScrollPane.setOpaque(false);
+        expenseScrollPane.getViewport().setOpaque(false);
+        expenseScrollPane.setBorder(BorderFactory.createTitledBorder("Expense Statistics"));
+        expenseScrollPane.getViewport().setBackground(new Color(255, 255, 255, 150)); // 设置滚动视图半透明
 
         // Create query button
-        JButton queryButton = new JButton("Query Statistics");
-        queryButton.setFont(new Font("微软雅黑", Font.BOLD, 14));
-        queryButton.setForeground(Color.BLACK);
-        queryButton.setBackground(new Color(255, 255, 255, 200));
-        queryButton.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(70, 130, 180)),
-                BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        JButton queryButton = createButton("Query Statistics");
         queryButton.addActionListener(e -> queryStatistics());
 
         // Main layout
         JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
         contentPanel.setOpaque(false);
+        contentPanel.setBackground(new Color(255, 255, 255, 180)); // 设置内容面板半透明但更不透明
 
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false);
+        topPanel.setBackground(new Color(255, 255, 255, 180)); // 设置顶部面板半透明但更不透明
         topPanel.add(dateRangePanel, BorderLayout.CENTER);
         topPanel.add(queryButton, BorderLayout.EAST);
 
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        JPanel statsPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        statsPanel.setOpaque(false);
+        statsPanel.setBackground(new Color(255, 255, 255, 180)); // 设置统计面板半透明但更不透明
+        statsPanel.add(scrollPane);
+        statsPanel.add(incomeScrollPane);
+        statsPanel.add(expenseScrollPane);
 
-        add(contentPanel, BorderLayout.CENTER);
+        contentPanel.add(topPanel, BorderLayout.NORTH);
+        contentPanel.add(statsPanel, BorderLayout.CENTER);
+
+        // Create chart panel
+        JPanel chartPanel = new JPanel(new GridLayout(2, 1));
+        chartPanel.setOpaque(false);
+        chartPanel.setBackground(new Color(255, 255, 255, 180)); // 设置图表面板半透明但更不透明
+        pieChartPanel = new ChartPanel(createEmptyPieChart());
+        pieChartPanel.setOpaque(false); // 设置饼图面板透明
+        pieChartPanel.setBackground(new Color(255, 255, 255, 150)); // 设置饼图背景半透明
+
+        barChartPanel = new ChartPanel(createEmptyBarChart());
+        barChartPanel.setOpaque(false); // 设置柱状图面板透明
+        barChartPanel.setBackground(new Color(255, 255, 255, 150)); // 设置柱状图背景半透明
+
+        chartPanel.add(pieChartPanel);
+        chartPanel.add(barChartPanel);
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, contentPanel, chartPanel);
+        splitPane.setDividerLocation(400);
+        splitPane.setOpaque(false); // 设置分割面板透明
+
+        add(splitPane, BorderLayout.CENTER);
+    }
+
+    private JTextArea createTextArea() {
+        JTextArea textArea = new JTextArea();
+        textArea.setFont(new Font("Segoe UI", Font.BOLD, 14)); // 使用更美观的字体
+        textArea.setForeground(Color.BLACK);
+        textArea.setEditable(false);
+        textArea.setBackground(new Color(255, 255, 255, 150)); // Make text area semi-transparent
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        return textArea;
+    }
+
+    private JButton createButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14)); // 使用更美观的字体
+        button.setForeground(Color.BLACK);
+        button.setBackground(new Color(173, 216, 230, 204)); // Light blue with 80% transparency
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(70, 130, 180)),
+                BorderFactory.createEmptyBorder(5, 15, 5, 15)));
+        button.setFocusPainted(false);
+
+        // 添加按钮悬停效果
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setForeground(new Color(70, 130, 180));
+                button.setFont(new Font("Segoe UI", Font.BOLD, 15));
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setForeground(Color.BLACK);
+                button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            }
+        });
+
+        button.setOpaque(false);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(true);
+        return button;
     }
 
     private JPanel createDateRangePanel() {
@@ -82,12 +168,22 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
         // Start date panel
         JPanel startDatePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         startDatePanel.setOpaque(false);
-        startDatePanel.add(new JLabel("Start Date:"));
+        startDatePanel.setBackground(new Color(255, 255, 255, 100)); // 设置开始日期面板半透明但更透明
+
+        // 添加标签和设置样式
+        JLabel startLabel = new JLabel("Start Date:");
+        startLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        startDatePanel.add(startLabel);
 
         startYearCombo = createYearComboBox();
         startMonthCombo = createMonthComboBox();
         startDayCombo = createDayComboBox((int) startYearCombo.getSelectedItem(),
                 (int) startMonthCombo.getSelectedItem());
+
+        // 设置下拉框样式
+        startYearCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        startMonthCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        startDayCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
         startDatePanel.add(startYearCombo);
         startDatePanel.add(new JLabel("Year"));
@@ -99,12 +195,22 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
         // End date panel
         JPanel endDatePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         endDatePanel.setOpaque(false);
-        endDatePanel.add(new JLabel("End Date:"));
+        endDatePanel.setBackground(new Color(255, 255, 255, 100)); // 设置结束日期面板半透明但更透明
+
+        // 添加标签和设置样式
+        JLabel endLabel = new JLabel("End Date:");
+        endLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        endDatePanel.add(endLabel);
 
         endYearCombo = createYearComboBox();
         endMonthCombo = createMonthComboBox();
         endDayCombo = createDayComboBox((int) endYearCombo.getSelectedItem(),
                 (int) endMonthCombo.getSelectedItem());
+
+        // 设置下拉框样式
+        endYearCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        endMonthCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        endDayCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
         endDatePanel.add(endYearCombo);
         endDatePanel.add(new JLabel("Year"));
@@ -204,6 +310,7 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
         // For storing income and expenses by category
         Map<String, Double> incomeByCategory = new HashMap<>();
         Map<String, Double> expenseByCategory = new HashMap<>();
+        Map<Integer, Double> expenseByMonth = new HashMap<>();
 
         for (Transaction t : transactions) {
             LocalDate transactionDate = t.getDate();
@@ -224,6 +331,9 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
                 totalExpense += t.getAmount();
                 // Update expense category statistics
                 expenseByCategory.merge(t.getCategory(), t.getAmount(), Double::sum);
+                // Update expense by month statistics
+                int month = transactionDate.getMonthValue();
+                expenseByMonth.merge(month, t.getAmount(), Double::sum);
             }
             transactionCount++;
         }
@@ -236,37 +346,69 @@ public class StatisticsPanel extends JPanel implements MainGUI.RefreshablePanel 
                     startDate.toString(), endDate.toString());
         }
 
-        // Build category statistics
-        StringBuilder categoryStats = new StringBuilder();
-
-        // Income category statistics
-        if (!incomeByCategory.isEmpty()) {
-            categoryStats.append("\nIncome by category:\n");
-            for (Map.Entry<String, Double> entry : incomeByCategory.entrySet()) {
-                double percentage = totalIncome > 0 ? (entry.getValue() / totalIncome) * 100 : 0;
-                categoryStats.append(String.format("  %s: ¥%.2f (%.1f%%)\n",
-                        entry.getKey(), entry.getValue(), percentage));
-            }
-        }
-
-        // Expense category statistics
-        if (!expenseByCategory.isEmpty()) {
-            categoryStats.append("\nExpenses by category:\n");
-            for (Map.Entry<String, Double> entry : expenseByCategory.entrySet()) {
-                double percentage = totalExpense > 0 ? (entry.getValue() / totalExpense) * 100 : 0;
-                categoryStats.append(String.format("  %s: ¥%.2f (%.1f%%)\n",
-                        entry.getKey(), entry.getValue(), percentage));
-            }
-        }
-
+        // Build general statistics
         statsArea.setText(String.format(
                 "%sStatistics:\n\n" +
                         "Total Income: ¥%.2f\n" +
                         "Total Expense: ¥%.2f\n" +
                         "Current Balance: ¥%.2f\n\n" +
-                        "Total Transactions: %d" +
-                        "%s",
-                dateRangeText, totalIncome, totalExpense, balance, transactionCount,
-                categoryStats.toString()));
+                        "Total Transactions: %d",
+                dateRangeText, totalIncome, totalExpense, balance, transactionCount));
+
+        // Build income category statistics
+        StringBuilder incomeStats = new StringBuilder();
+        if (!incomeByCategory.isEmpty()) {
+            incomeStats.append("Income by category:\n");
+            for (Map.Entry<String, Double> entry : incomeByCategory.entrySet()) {
+                double percentage = totalIncome > 0 ? (entry.getValue() / totalIncome) * 100 : 0;
+                incomeStats.append(String.format("  %s: ¥%.2f (%.1f%%)\n",
+                        entry.getKey(), entry.getValue(), percentage));
+            }
+        }
+        incomeStatsArea.setText(incomeStats.toString());
+
+        // Build expense category statistics
+        StringBuilder expenseStats = new StringBuilder();
+        if (!expenseByCategory.isEmpty()) {
+            expenseStats.append("Expenses by category:\n");
+            for (Map.Entry<String, Double> entry : expenseByCategory.entrySet()) {
+                double percentage = totalExpense > 0 ? (entry.getValue() / totalExpense) * 100 : 0;
+                expenseStats.append(String.format("  %s: ¥%.2f (%.1f%%)\n",
+                        entry.getKey(), entry.getValue(), percentage));
+            }
+        }
+        expenseStatsArea.setText(expenseStats.toString());
+
+        // Update charts
+        updatePieChart(expenseByCategory); // Use expense data for pie chart
+        updateBarChart(expenseByMonth);
+    }
+
+    private JFreeChart createEmptyPieChart() {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        return ChartFactory.createPieChart("Expenses by Category", dataset, true, true, false);
+    }
+
+    private JFreeChart createEmptyBarChart() {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        return ChartFactory.createBarChart("Expenses by Month", "Month", "Amount", dataset);
+    }
+
+    private void updatePieChart(Map<String, Double> expenseByCategory) {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        for (Map.Entry<String, Double> entry : expenseByCategory.entrySet()) {
+            dataset.setValue(entry.getKey(), entry.getValue());
+        }
+        JFreeChart chart = ChartFactory.createPieChart("Expenses by Category", dataset, true, true, false);
+        pieChartPanel.setChart(chart);
+    }
+
+    private void updateBarChart(Map<Integer, Double> expenseByMonth) {
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<Integer, Double> entry : expenseByMonth.entrySet()) {
+            dataset.addValue(entry.getValue(), "Expense", entry.getKey().toString());
+        }
+        JFreeChart chart = ChartFactory.createBarChart("Expenses by Month", "Month", "Amount", dataset);
+        barChartPanel.setChart(chart);
     }
 }
