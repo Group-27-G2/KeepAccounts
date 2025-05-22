@@ -14,10 +14,17 @@ public class AdvicePanel extends JPanel implements MainGUI.RefreshablePanel {
     private JTextArea adviceArea;
     private JButton getAdviceButton;
     private TransactionManager transactionManager;
+    private JLabel statusLabel;
 
     private static final String API_KEY = "sk-W0rpStc95T7JVYVwDYc29IyirjtpPPby6SozFMQr17m8KWeo";
     private static final String API_URL = "https://api.suanli.cn/v1/chat/completions";
     private static final String MODEL_NAME = "free:QwQ-32B";
+
+    // UI Colors
+    private static final Color PRIMARY_COLOR = new Color(70, 130, 180);
+    private static final Color BUTTON_COLOR = new Color(135, 206, 250);
+    private static final Color BACKGROUND_COLOR = new Color(245, 245, 245, 180); // Semi-transparent
+    private static final Color TEXT_COLOR = new Color(50, 50, 50);
 
     public AdvicePanel(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
@@ -25,26 +32,106 @@ public class AdvicePanel extends JPanel implements MainGUI.RefreshablePanel {
     }
 
     private void initializeUI() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(15, 15));
+        setOpaque(false); // Make panel transparent
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        adviceArea = new JTextArea();
-        adviceArea.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        // Header Panel
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
+
+        JLabel titleLabel = new JLabel("AI Financial Advisor");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(PRIMARY_COLOR);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        statusLabel = new JLabel("Ready to generate advice");
+        statusLabel.setFont(new Font("SansSerif", Font.ITALIC, 14));
+        statusLabel.setForeground(TEXT_COLOR);
+        statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        headerPanel.add(titleLabel, BorderLayout.NORTH);
+        headerPanel.add(statusLabel, BorderLayout.SOUTH);
+
+        // Advice Display Area with semi-transparent background
+        adviceArea = new JTextArea() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Draw semi-transparent background
+                g2.setColor(BACKGROUND_COLOR);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+
+                super.paintComponent(g);
+            }
+        };
+
+        adviceArea.setFont(new Font("SansSerif", Font.PLAIN, 16));
         adviceArea.setLineWrap(true);
         adviceArea.setWrapStyleWord(true);
         adviceArea.setEditable(false);
+        adviceArea.setOpaque(false); // Make text area transparent
+        adviceArea.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
         JScrollPane scrollPane = new JScrollPane(adviceArea);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Button Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        buttonPanel.setOpaque(false);
 
         getAdviceButton = new JButton("Get AI Financial Advice");
         getAdviceButton.setFont(new Font("SansSerif", Font.BOLD, 16));
-        getAdviceButton.setBackground(new Color(135, 206, 250));
+        getAdviceButton.setForeground(Color.WHITE);
+        getAdviceButton.setBackground(BUTTON_COLOR);
+        getAdviceButton.setFocusPainted(false);
+        getAdviceButton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+                BorderFactory.createEmptyBorder(10, 30, 10, 30)));
         getAdviceButton.addActionListener(this::onGetAdviceClicked);
 
+        // Add rounded corners to button
+        getAdviceButton.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                JButton b = (JButton) c;
+                ButtonModel model = b.getModel();
+
+                Color color = BUTTON_COLOR;
+                if (model.isPressed()) {
+                    color = color.darker();
+                } else if (model.isRollover()) {
+                    color = color.brighter();
+                }
+
+                g2.setColor(color);
+                g2.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), 25, 25);
+
+                super.paint(g2, c);
+                g2.dispose();
+            }
+        });
+
+        buttonPanel.add(getAdviceButton);
+
+        // Assemble components
+        add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-        add(getAdviceButton, BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private void onGetAdviceClicked(ActionEvent e) {
         getAdviceButton.setEnabled(false);
+        statusLabel.setText("Generating advice...");
         adviceArea.setText("Retrieving advice from AI, please wait...");
 
         new Thread(() -> {
@@ -54,6 +141,7 @@ public class AdvicePanel extends JPanel implements MainGUI.RefreshablePanel {
             SwingUtilities.invokeLater(() -> {
                 adviceArea.setText(advice);
                 getAdviceButton.setEnabled(true);
+                statusLabel.setText("Advice generated");
             });
         }).start();
     }
@@ -127,6 +215,7 @@ public class AdvicePanel extends JPanel implements MainGUI.RefreshablePanel {
                 JSONObject message = choices.getJSONObject(0).getJSONObject("message");
                 String content = message.getString("content");
 
+                // 🔧 Remove model "thinking" tags (e.g., <think>...</think>)
                 content = content.replaceAll("(?s)<think>.*?</think>", "").trim();
 
                 return content;
