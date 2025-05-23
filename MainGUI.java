@@ -10,6 +10,12 @@ public class MainGUI extends JFrame {
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
+    // Color constants
+    private static final Color NAV_BACKGROUND = new Color(70, 130, 180); // Navigation panel background
+    private static final Color BUTTON_NORMAL = new Color(240, 240, 240); // Normal button color
+    private static final Color BUTTON_HOVER = new Color(220, 220, 220); // Button hover color
+    private static final Color BUTTON_PRESSED = new Color(200, 200, 200); // Button pressed color
+
     public MainGUI(User user, UserManager userManager) {
         this.currentUser = user;
         this.userManager = userManager;
@@ -23,7 +29,7 @@ public class MainGUI extends JFrame {
     }
 
     private void initializeUI() {
-        setTitle("Personal Finance Management - User ID: " + currentUser.getId());
+        setTitle("Personal Finance Management - User: " + currentUser.getUsername());
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -49,7 +55,7 @@ public class MainGUI extends JFrame {
         leftPanel.setPreferredSize(new Dimension(200, getHeight()));
         leftPanel.setLayout(new GridLayout(7, 1, 0, 10));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        leftPanel.setBackground(new Color(70, 130, 180, 150));
+        leftPanel.setBackground(NAV_BACKGROUND);
 
         JLabel titleLabel = new JLabel("Finance System");
         titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
@@ -61,12 +67,7 @@ public class MainGUI extends JFrame {
         String[] cardNames = { "transaction", "category", "statistics", "user", "advice" };
 
         for (int i = 0; i < buttonNames.length; i++) {
-            JButton button = new JButton(buttonNames[i]);
-            button.setFont(new Font("SansSerif", Font.BOLD, 16));
-            button.setForeground(Color.BLACK);
-            button.setBackground(new Color(255, 255, 255, 150));
-            button.setOpaque(true);
-            button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            JButton button = createNavigationButton(buttonNames[i]);
 
             final String cardName = cardNames[i];
             button.addActionListener(e -> {
@@ -77,13 +78,52 @@ public class MainGUI extends JFrame {
             leftPanel.add(button);
         }
 
-        JLabel userLabel = new JLabel("User: " + currentUser.getId());
+        JLabel userLabel = new JLabel("User: " + currentUser.getUsername());
         userLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
         userLabel.setForeground(Color.BLACK);
         userLabel.setHorizontalAlignment(SwingConstants.CENTER);
         leftPanel.add(userLabel);
 
         return leftPanel;
+    }
+
+    private JButton createNavigationButton(String text) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                Color color;
+                if (getModel().isPressed()) {
+                    color = BUTTON_PRESSED;
+                } else if (getModel().isRollover()) {
+                    color = BUTTON_HOVER;
+                } else {
+                    color = BUTTON_NORMAL;
+                }
+
+                g2d.setColor(color);
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+
+                // Draw text
+                FontMetrics metrics = g.getFontMetrics(getFont());
+                int x = (getWidth() - metrics.stringWidth(getText())) / 2;
+                int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+                g2d.setColor(Color.BLACK);
+                g2d.setFont(getFont());
+                g2d.drawString(getText(), x, y);
+            }
+        };
+
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setForeground(Color.BLACK);
+        button.setContentAreaFilled(false);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        button.setFocusPainted(false);
+        button.setOpaque(false);
+
+        return button;
     }
 
     private void createPanels() {
