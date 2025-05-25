@@ -21,15 +21,16 @@ A Java-based personal finance management tool designed to help users efficiently
 ```
 main/
 ├── src/
-│   └── src/
-│       ├── User.java
-│       ├── TransactionManager.java
-│       ├── StatisticsGUI.java
-│       └── ...
+│    ├── User.java
+│    ├── TransactionManager.java
+│    ├── StatisticsGUI.java
+│    └── ...
 ├── image/
 ├── test/
 │   ├── UserManagerTest.java
 │   └── TransactionTest.java
+├── lib/
+
 ```
 
 3.**🚀Run the Program**
